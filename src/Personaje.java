@@ -1,57 +1,51 @@
-class Personaje {
+public class Personaje {
     private String nombre;
     private int nivel;
     private int experiencia;
     private int vida;
-    private boolean vivo;
-
 
     public Personaje(String nombre) {
         this.nombre = nombre;
-        nivel = 1;
-        experiencia = 0;
-        vida = 100;
-        vivo = true;
+        this.nivel = 1;
+        this.experiencia = 0;
+        this.vida = 100;
     }
-
-    public String ganarExperiencia() {
-        experiencia += 10;
-        return "El personaje ganó 10 puntos de experiencia.";
+    public String crearUsuario() {
+        return "Personaje " + nombre + " creado correctamente.";
     }
-
-    public String subirNivel() {
-        nivel++;
-        experiencia = 0;
-        return "El personaje subió de nivel";
-    }
-
-    public String recibirDaño() {
-        vida -= 15;
-
-        if (vida <= 0) {
-            vida = 0;
-            vivo = false;
-            return "El personaje recibió daño y ha muerto";
-        }
-
-        return "El personaje recibió 15 puntos de daño";
-    }
-
-    public String curarse() {
-        if (!vivo) {
-            return "No se puede curar porque está muerto";
-        }
-
-        vida += 20;
-        return "El personaje se curó 20 puntos";
-    }
-
     public String mostrarEstado() {
-        return "      ESTADO      " +
-                "Nombre: " + nombre +
+        return "Nombre: " + nombre +
                 "Nivel: " + nivel +
                 "Experiencia: " + experiencia +
-                "Vida: " + vida +
-                "¿Está vivo?: " + vivo;
+                "Vida: " + vida + "\n";
+    }
+    public String ganarExperiencia() {
+        experiencia += 50;
+        return nombre + " ganó 50 puntos de experiencia.";
+    }
+    public String subirNivel() {
+        if (experiencia >= 100) {
+            nivel++;
+            experiencia = 0;
+            return nombre + " subió a nivel " + nivel;
+        }
+        return "No tienes suficiente experiencia para subir de nivel.";
+    }
+    public String recibirDano() {
+        vida -= 20;
+        if (vida < 0) {
+            vida = 0;
+        }
+        return nombre + " recibió 20 de daño.";
+    }
+    public String curarse() {
+        vida += 20;
+        if (vida > 100) {
+            vida = 100;
+        }
+        return nombre + " se curó 20 puntos.";
+    }
+    public String getNombre() {
+        return nombre;
     }
 }
