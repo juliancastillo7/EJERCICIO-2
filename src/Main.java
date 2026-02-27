@@ -7,7 +7,9 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
         ArrayList<Personaje> listaPersonajes = new ArrayList<>();
-        int opcion;
+
+        int opcion = 0;
+
         do {
             System.out.println("       MENÚ       ");
             System.out.println("1. Crear personaje ");
@@ -18,71 +20,112 @@ public class Main {
             System.out.println("6. Curarse");
             System.out.println("7. Salir");
             System.out.print("Opción: ");
-            opcion = sc.nextInt();
-            sc.nextLine();
+
+            if (sc.hasNextInt()) {
+                opcion = sc.nextInt();
+                sc.nextLine();
+            } else {
+                System.out.println("Debes ingresar un número.");
+                sc.nextLine();
+                continue;
+            }
 
             switch (opcion) {
 
                 case 1:
                     System.out.print("Ingrese nombre del personaje: ");
-                    String nombre = sc.nextLine();
+                    String nombre = sc.nextLine().trim();
+
+                    if (nombre.isEmpty()) {
+                        System.out.println("El nombre no puede estar vacío.");
+                        break;
+                    }
+
                     Personaje nuevo = new Personaje(nombre);
                     listaPersonajes.add(nuevo);
                     System.out.println(nuevo.crearUsuario());
                     break;
+
                 case 2:
-                    for (Personaje p : listaPersonajes) {
-                        System.out.println(p.mostrarEstado());
+                    if (listaPersonajes.isEmpty()) {
+                        System.out.println("No hay personajes creados.");
+                    } else {
+                        for (Personaje p : listaPersonajes) {
+                            System.out.println(p.mostrarEstado());
+                        }
                     }
                     break;
+
                 case 3:
-                    Personaje pExp = seleccionarPersonaje(listaPersonajes, sc);
-                    if (pExp != null) {
-                        System.out.println(pExp.ganarExperiencia());
-                    }
+                    ejecutarAccion(listaPersonajes, sc, 1);
                     break;
+
                 case 4:
-                    Personaje pNivel = seleccionarPersonaje(listaPersonajes, sc);
-                    if (pNivel != null) {
-                        System.out.println(pNivel.subirNivel());
-                    }
+                    ejecutarAccion(listaPersonajes, sc, 2);
                     break;
+
                 case 5:
-                    Personaje pDaño = seleccionarPersonaje(listaPersonajes, sc);
-                    if (pDaño != null) {
-                        System.out.println(pDaño.recibirDano());
-                    }
+                    ejecutarAccion(listaPersonajes, sc, 3);
                     break;
+
                 case 6:
-                    Personaje pCura = seleccionarPersonaje(listaPersonajes, sc);
-                    if (pCura != null) {
-                        System.out.println(pCura.curarse());
-                    }
+                    ejecutarAccion(listaPersonajes, sc, 4);
                     break;
+
                 case 7:
-                    System.out.println("Saliendo");
+                    System.out.println("Saliendo...");
                     break;
+
                 default:
-                    System.out.println("Opción inválida");
+                    System.out.println("Opción inválida.");
             }
+
         } while (opcion != 7);
+
         sc.close();
     }
 
-    public static Personaje seleccionarPersonaje(ArrayList<Personaje> lista, Scanner sc) {
+    public static void ejecutarAccion(ArrayList<Personaje> lista, Scanner sc, int tipo) {
+
         if (lista.isEmpty()) {
             System.out.println("No hay personajes creados.");
-            return null;
+            return;
         }
+
         System.out.println("Seleccione personaje:");
         for (int i = 0; i < lista.size(); i++) {
             System.out.println(i + " - " + lista.get(i).getNombre());
         }
-        int indice = sc.nextInt();
-        if (indice >= 0 && indice < lista.size()) {
-            return lista.get(indice);
+
+        if (!sc.hasNextInt()) {
+            System.out.println("Debes ingresar un número válido.");
+            sc.nextLine();
+            return;
         }
-        System.out.println("Índice inválido.");
-        return null;
+
+        int indice = sc.nextInt();
+        sc.nextLine();
+
+        if (indice < 0 || indice >= lista.size()) {
+            System.out.println("Índice inválido.");
+            return;
+        }
+
+        Personaje p = lista.get(indice);
+
+        switch (tipo) {
+            case 1:
+                System.out.println(p.ganarExperiencia());
+                break;
+            case 2:
+                System.out.println(p.subirNivel());
+                break;
+            case 3:
+                System.out.println(p.recibirDaño());
+                break;
+            case 4:
+                System.out.println(p.curarse());
+                break;
+        }
     }
 }
